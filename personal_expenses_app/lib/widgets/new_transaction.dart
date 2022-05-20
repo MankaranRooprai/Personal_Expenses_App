@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 //class gathers data from TextFields and calls the addTx function which sets state in main.dart
 class NewTransaction extends StatefulWidget {
@@ -11,13 +12,13 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final titleController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime _selectedDate;
 
-  final amountController = TextEditingController();
-
-  submitData() {
-    final enteredTitle = titleController.text;
-    final enteredAmountString = amountController.text;
+  _submitData() {
+    final enteredTitle = _titleController.text;
+    final enteredAmountString = _amountController.text;
 
     if (enteredAmountString.isEmpty && enteredTitle.isEmpty) {
       Navigator.of(context).pop();
@@ -42,7 +43,7 @@ class _NewTransactionState extends State<NewTransaction> {
       );
     }
 
-    final enteredAmount = double.parse(amountController.text);
+    final enteredAmount = double.parse(_amountController.text);
 
     if (enteredAmount < 1 || enteredAmount > 10) {
       Navigator.of(context).pop();
@@ -61,6 +62,22 @@ class _NewTransactionState extends State<NewTransaction> {
     Navigator.of(context).pop();
   }
 
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+    ).then((pickedData) {
+      if (pickedData == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedData;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -74,8 +91,8 @@ class _NewTransactionState extends State<NewTransaction> {
               decoration: InputDecoration(
                 labelText: 'How are you feeling today?',
               ),
-              controller: titleController,
-              onSubmitted: (val) => submitData(),
+              controller: _titleController,
+              onSubmitted: (val) => _submitData(),
               // onChanged: (val) {
               //   titleInput = val;
               // },
@@ -84,15 +101,38 @@ class _NewTransactionState extends State<NewTransaction> {
               decoration: InputDecoration(
                 labelText: 'Rate your pain (1-10)',
               ),
-              controller: amountController,
+              controller: _amountController,
               keyboardType: TextInputType.number,
-              onSubmitted: (val) => submitData(),
+              onSubmitted: (val) => _submitData(),
               //onChanged: (val) => amountInput = val,
             ),
-            FlatButton(
-              textColor: Colors.blue,
+            Container(
+              height: 70,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      _selectedDate == null
+                          ? 'No Date Chosen!'
+                          : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}',
+                    ),
+                  ),
+                  FlatButton(
+                    textColor: Theme.of(context).primaryColor,
+                    onPressed: _presentDatePicker,
+                    child: Text(
+                      'Choose Date',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
               child: Text('Add Note'),
-              onPressed: submitData,
+              onPressed: _submitData,
             )
           ],
         ),
