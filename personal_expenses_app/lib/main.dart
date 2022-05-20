@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+
+import 'package:personal_expenses_app/widgets/chart.dart';
 import 'package:personal_expenses_app/widgets/new_transaction.dart';
 import './widgets/transactions_list.dart';
 import './models/transaction.dart';
+import './widgets/chart.dart';
 
 void main() => runApp(MyApp());
 
@@ -50,6 +53,12 @@ class _MyHomePageState extends State<MyHomePage> {
     //     amount: 16.53,
     //     date: DateTime.now()),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
 
   //creates a new transaction and changes the GUI by setting state
   void _addNewTransaction(String txTitle, double txAmount) {
@@ -100,14 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('CHART!'),
-                elevation: 5,
-              ),
-            ),
+            Chart(_recentTransactions),
             //pass the transactions list to the TransactionList class so it can display the transactions
             TransactionList(
                 _userTransactions), // Column to show each transaction on screen
