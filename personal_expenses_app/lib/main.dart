@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Personal Expenses',
+          'AIMA Laboratories',
         ),
         actions: <Widget>[
           //when add button on appbar is clicked, the modal bottom sheet shows up
