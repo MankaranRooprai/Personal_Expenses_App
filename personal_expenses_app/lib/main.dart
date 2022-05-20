@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import './widgets/user_transaction.dart';
+import 'package:personal_expenses_app/widgets/new_transaction.dart';
+import './widgets/transactions_list.dart';
+import './models/transaction.dart';
 
 void main() => runApp(MyApp());
 
@@ -7,26 +9,88 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
+      title: 'Personal Expenses',
+      theme: ThemeData(
+        primarySwatch: Colors.pink,
+        accentColor: Color.fromARGB(255, 85, 88, 255),
+        fontFamily: 'Quicksand',
+        textTheme: ThemeData.light().textTheme.copyWith(
+              titleLarge: TextStyle(
+                fontFamily: 'OpenSans',
+                fontSize: 20,
+              ),
+            ),
+        appBarTheme: AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  //String titleInput;
-  //String amountInput;
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
+//stateful widget
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  //list of transactions of type Transaction (created class) (holds preset and future Transactions)
+  final List<Transaction> _userTransactions = [
+    // Transaction(
+    //     id: 't1', title: 'New Shoes', amount: 69.99, date: DateTime.now()),
+    // Transaction(
+    //     id: 't2',
+    //     title: 'Weekly Groceries',
+    //     amount: 16.53,
+    //     date: DateTime.now()),
+  ];
+
+  //creates a new transaction and changes the GUI by setting state
+  void _addNewTransaction(String txTitle, double txAmount) {
+    //creates a new object of type Transaction
+    final newTx = Transaction(
+      title: txTitle,
+      amount: txAmount,
+      date: DateTime.now(),
+      id: DateTime.now().toString(),
+    );
+    //sets state by add the new transaction to the pre-existing list
+    setState(() {
+      _userTransactions.add(newTx);
+    });
+  }
+
+  //when add buttons are clicked, a modal bottom sheet shows up for user to add transaction
+  void _startAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return GestureDetector(
+          child: NewTransaction(_addNewTransaction),
+          onTap: () {},
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter App'),
+        title: Text(
+          'Personal Expenses',
+        ),
         actions: <Widget>[
+          //when add button on appbar is clicked, the modal bottom sheet shows up
           IconButton(
-            onPressed: () {},
+            onPressed: () => _startAddNewTransaction(context),
             icon: Icon(Icons.add),
           ),
         ],
@@ -44,14 +108,18 @@ class MyHomePage extends StatelessWidget {
                 elevation: 5,
               ),
             ),
-            UserTransactions(), // Column to show each transaction on screen
+            //pass the transactions list to the TransactionList class so it can display the transactions
+            TransactionList(
+                _userTransactions), // Column to show each transaction on screen
           ],
         ),
       ),
+      //display add button on center-bottom of display
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        //when button is pressed, show modal bottom sheet
+        onPressed: () => _startAddNewTransaction(context),
       ),
     );
   }
