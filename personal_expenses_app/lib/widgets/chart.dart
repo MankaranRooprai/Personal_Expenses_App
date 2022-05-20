@@ -15,6 +15,7 @@ class Chart extends StatelessWidget {
         Duration(days: index),
       );
       var totalSum = 0.0;
+      var average = 0.0;
 
       for (var i = 0; i < recentTransactions.length; i++) {
         if (recentTransactions[i].date.day == weekDay.day &&
@@ -22,16 +23,18 @@ class Chart extends StatelessWidget {
             recentTransactions[i].date.year == weekDay.year) {
           totalSum += recentTransactions[i].amount;
         }
+
+        average = totalSum / (i + 1.0);
       }
 
       print(DateFormat.E().format(weekDay));
-      print(totalSum);
+      print(average);
 
       return {
         'day': DateFormat.E().format(weekDay).substring(0, 1),
-        'amount': totalSum,
+        'amount': average,
       };
-    });
+    }).reversed.toList();
   }
 
   double get totalSpending {

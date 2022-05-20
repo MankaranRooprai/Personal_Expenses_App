@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Personal Expenses',
       theme: ThemeData(
         primarySwatch: Colors.pink,
-        accentColor: Color.fromARGB(255, 85, 88, 255),
+        accentColor: Colors.blue,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
               titleLarge: TextStyle(
