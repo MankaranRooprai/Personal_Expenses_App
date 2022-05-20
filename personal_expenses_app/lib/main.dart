@@ -61,12 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //creates a new transaction and changes the GUI by setting state
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     //creates a new object of type Transaction
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: chosenDate,
       id: DateTime.now().toString(),
     );
     //sets state by add the new transaction to the pre-existing list

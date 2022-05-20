@@ -20,11 +20,13 @@ class _NewTransactionState extends State<NewTransaction> {
     final enteredTitle = _titleController.text;
     final enteredAmountString = _amountController.text;
 
-    if (enteredAmountString.isEmpty && enteredTitle.isEmpty) {
+    if (enteredAmountString.isEmpty &&
+        enteredTitle.isEmpty &&
+        _selectedDate == null) {
       Navigator.of(context).pop();
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please enter a description and a rating'),
+          content: Text('Please enter a description, rating, and a date'),
         ),
       );
     } else if (enteredTitle.isEmpty) {
@@ -39,6 +41,13 @@ class _NewTransactionState extends State<NewTransaction> {
       return ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please enter a rating between 1-10'),
+        ),
+      );
+    } else if (_selectedDate == null) {
+      Navigator.of(context).pop();
+      return ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a date'),
         ),
       );
     }
@@ -57,6 +66,7 @@ class _NewTransactionState extends State<NewTransaction> {
     widget.addTx(
       enteredTitle,
       enteredAmount,
+      _selectedDate,
     );
 
     Navigator.of(context).pop();
@@ -114,7 +124,7 @@ class _NewTransactionState extends State<NewTransaction> {
                     child: Text(
                       _selectedDate == null
                           ? 'No Date Chosen!'
-                          : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}',
+                          : 'Picked Date: ${DateFormat.yMMMd().add_jm().format(_selectedDate)}',
                     ),
                   ),
                   FlatButton(
