@@ -14,7 +14,7 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     // container with height since ListView needs to have a limit
     return Container(
-      height: 300,
+      height: 450,
       //ListView.builder only renders what's in viewport (good for lists with unknown amount of items or long lists of items)
       child: transactions.isEmpty
           ? Column(
