@@ -14,14 +14,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Personal Expenses',
       theme: ThemeData(
-        primarySwatch: Colors.pink,
-        accentColor: Color.fromARGB(255, 85, 88, 255),
+        primarySwatch: Colors.green,
+        accentColor: Color.fromARGB(255, 240, 46, 46),
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
-              titleLarge: TextStyle(
+              headlineLarge: TextStyle(
                 fontFamily: 'OpenSans',
                 fontSize: 20,
               ),
+              button: TextStyle(color: Colors.white),
             ),
         appBarTheme: AppBarTheme(
           titleTextStyle: TextStyle(
@@ -61,12 +62,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //creates a new transaction and changes the GUI by setting state
-  void _addNewTransaction(String txTitle, double txAmount) {
+  void _addNewTransaction(
+      String txTitle, double txAmount, DateTime chosenDate) {
     //creates a new object of type Transaction
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
-      date: DateTime.now(),
+      date: chosenDate,
       id: DateTime.now().toString(),
     );
     //sets state by add the new transaction to the pre-existing list
@@ -89,30 +91,54 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  // function to delete transactions
+  void _deleteTransaction(String id) {
+    // rebuild the app
+    setState(() {
+      // remove the item from the user transactions list
+      _userTransactions.removeWhere((tx) {
+        // check in the user transactions list where the desired id matches the correct id
+        return tx.id == id;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'AIMA Laboratories',
-        ),
-        actions: <Widget>[
-          //when add button on appbar is clicked, the modal bottom sheet shows up
-          IconButton(
-            onPressed: () => _startAddNewTransaction(context),
-            icon: Icon(Icons.add),
-          ),
-        ],
+    final appBar = AppBar(
+      title: Text(
+        'Personal Expenses',
       ),
+      actions: <Widget>[
+        //when add button on appbar is clicked, the modal bottom sheet shows up
+        IconButton(
+          onPressed: () => _startAddNewTransaction(context),
+          icon: Icon(Icons.add),
+        ),
+      ],
+    );
+    return Scaffold(
+      appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Chart(_recentTransactions),
+            Container(
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  0.4,
+              child: Chart(_recentTransactions),
+            ),
             //pass the transactions list to the TransactionList class so it can display the transactions
-            TransactionList(
-                _userTransactions), // Column to show each transaction on screen
+            Container(
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  0.6,
+              child: TransactionList(_userTransactions, _deleteTransaction),
+            ), // Column to show each transaction on screen
           ],
         ),
       ),
