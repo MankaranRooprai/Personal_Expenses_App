@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         textTheme: ThemeData.light().textTheme.copyWith(
               headlineLarge: TextStyle(
                 fontFamily: 'OpenSans',
-                fontSize: 20,
+                fontSize: 18,
               ),
               button: TextStyle(color: Colors.white),
             ),
@@ -91,7 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // function to delete transactions
   void _deleteTransaction(String id) {
     // rebuild the app
     setState(() {
