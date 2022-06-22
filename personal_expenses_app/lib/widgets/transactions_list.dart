@@ -53,15 +53,21 @@ class TransactionList extends StatelessWidget {
                   subtitle: Text(
                     DateFormat.yMMMd().format(transactions[index].date),
                   ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    // default error colour is red
-                    color: Theme.of(context).errorColor,
-                    // when garbage icon pressed, call deleteTx function by passed in tx id
-                    // can't directly call function because onPressed takes in a function without arguments
-                    // solution is to create anonymous function and then pass in argument
-                    onPressed: () => deleteTx(transactions[index].id),
-                  ),
+                  trailing: MediaQuery.of(context).size.width > 360
+                      ? FlatButton.icon(
+                          icon: Icon(Icons.delete),
+                          label: Text('Delete'),
+                          textColor: Theme.of(context).errorColor,
+                          onPressed: () => deleteTx(transactions[index].id))
+                      : IconButton(
+                          icon: Icon(Icons.delete),
+                          // default error colour is red
+                          color: Theme.of(context).errorColor,
+                          // when garbage icon pressed, call deleteTx function by passed in tx id
+                          // can't directly call function because onPressed takes in a function without arguments
+                          // solution is to create anonymous function and then pass in argument
+                          onPressed: () => deleteTx(transactions[index].id),
+                        ),
                 ),
               );
             },
